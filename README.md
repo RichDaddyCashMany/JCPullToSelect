@@ -18,7 +18,7 @@
 
 ## 1 使用Cocoapods导入
 
-#### 请稍后
+#### 在Podfile增加一行：`pod 'JCPullToSelect'`
 
 ## 2 手动导入
 
