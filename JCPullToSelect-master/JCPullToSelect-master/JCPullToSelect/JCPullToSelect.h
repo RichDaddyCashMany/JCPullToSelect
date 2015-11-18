@@ -1,10 +1,9 @@
-//
-//  JCPullToSelect.h
-//  JCPullToSelect-master
-//
-//  Created by mac on 15/11/12.
-//  Copyright © 2015年 HJaycee. All rights reserved.
-//
+/**
+ * GitHub:https://github.com/HJaycee
+ * 邮箱:hjaycee@163.com
+ * http://blog.csdn.net/hjaycee
+ * 如发现框架有bug或者有任何建议或疑问都请发我邮箱，谢谢！
+ */
 
 #import "JCHeader.h"
 #import "JCBallLayer.h"
