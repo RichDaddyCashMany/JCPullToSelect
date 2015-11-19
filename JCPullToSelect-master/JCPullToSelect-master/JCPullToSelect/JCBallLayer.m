@@ -80,7 +80,7 @@
 - (void)animateToNewOriginX:(CGFloat)newOriginX{
     NSArray *keyPaths = @[@"radiusWLeft", @"radiusWRight", @"originX"];
     NSArray *valuesArray = @[@[@(self.radiusWLeft),@25],
-                             @[@(self.radiusH),@25],
+                             @[@(self.radiusWRight),@25],
                              @[@(self.originX),@(newOriginX)]];
     
     for (int i = 0; i<keyPaths.count; i++) {
@@ -98,8 +98,29 @@
     [self addAnimation:anim forKey:keyPath];
 }
 
+- (void)refreshAnimating{
+    NSArray *keyPaths = @[@"radiusWLeft", @"radiusWRight", @"radiusH"];
+    NSArray *valuesArray = @[@[@(self.radiusWLeft),@15],
+                             @[@(self.radiusWRight),@15],
+                             @[@(self.radiusH),@15]];
+    
+    for (int i = 0; i<keyPaths.count; i++) {
+        [self animateScaleWithKeyPath:keyPaths[i] values:valuesArray[i]];
+    }
+}
+
+- (void)animateScaleWithKeyPath:(NSString *)keyPath values:(NSArray *)values{
+    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:keyPath];
+    anim.values = values;
+    anim.duration = 0.25;
+    anim.fillMode = kCAFillModeForwards;
+    anim.removedOnCompletion = NO;
+    anim.delegate = self;
+    [self addAnimation:anim forKey:[NSString stringWithFormat:@"scale_%@", keyPath]];
+}
+
 + (BOOL)needsDisplayForKey:(NSString *)key{
-    if ([key isEqualToString:@"radiusWLeft"] || [key isEqualToString:@"radiusWRight"] || [key isEqualToString:@"originX"]) {
+    if ([key isEqualToString:@"radiusWLeft"] || [key isEqualToString:@"radiusWRight"] || [key isEqualToString:@"originX"] || [key isEqualToString:@"radiusH"]) {
         return YES;
     }
     return [super needsDisplayForKey:key];
