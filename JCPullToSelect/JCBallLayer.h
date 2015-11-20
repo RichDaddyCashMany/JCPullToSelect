@@ -22,4 +22,6 @@
 
 - (void)animateToNewOriginX:(CGFloat)newOriginX;
 
+- (void)refreshAnimating;
+
 @end

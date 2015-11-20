@@ -53,7 +53,7 @@ static NSInteger defaultIndex;
         [self.layer addSublayer:ballLayer];
         self.ballLayer = ballLayer;
         
-        self.rotationView = JCRefreshingView;
+        self.rotationView = [[UIImageView alloc] initWithImage:[self changeImage:JCRefreshingImage toColor:ballLayerColor]];
         self.rotationView.frame = CGRectMake(0, 0, BallWidth, BallWidth);
         [self addSubview:self.rotationView];
         self.rotationView.alpha = 0;
@@ -61,6 +61,21 @@ static NSInteger defaultIndex;
         [self initialization];
     }
     return self;
+}
+
+- (UIImage *)changeImage:(UIImage *)image toColor:(UIColor *)color{
+    UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, 0, image.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
+    CGContextClipToMask(context, rect, image.CGImage);
+    [color setFill];
+    CGContextFillRect(context, rect);
+    UIImage*newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 - (void)initialization{
@@ -147,8 +162,8 @@ static NSInteger defaultIndex;
     CGFloat movex = change * LeaveMoveRate;
     CGFloat moveRadius = change * (1 - LeaveMoveRate);
     self.ballLayer.originX = defaultOriginX + movex;
-    self.ballLayer.radiusWRight = defaultRadiusWRight + moveRadius * 0.6;
-    self.ballLayer.radiusWLeft = defaultRadiusWLeft + moveRadius * 0.4;
+    self.ballLayer.radiusWRight = defaultRadiusWRight + moveRadius * 0.7;
+    self.ballLayer.radiusWLeft = defaultRadiusWLeft + moveRadius * 0.3;
 }
 
 - (void)deformToLeftWithChange:(CGFloat)change{
@@ -156,8 +171,8 @@ static NSInteger defaultIndex;
     CGFloat movex = change * LeaveMoveRate;
     CGFloat moveRadius = change * (1 - LeaveMoveRate);
     self.ballLayer.originX = defaultOriginX - movex;
-    self.ballLayer.radiusWRight = defaultRadiusWRight + moveRadius * 0.4;
-    self.ballLayer.radiusWLeft = defaultRadiusWLeft + moveRadius * 0.6;
+    self.ballLayer.radiusWRight = defaultRadiusWRight + moveRadius * 0.3;
+    self.ballLayer.radiusWLeft = defaultRadiusWLeft + moveRadius * 0.7;
 }
 
 - (void)addNormalViews:(NSArray *)normalViews{
@@ -307,27 +322,33 @@ static NSInteger defaultIndex;
 
 - (void)refreshAnimating{
     self.rotationView.center = CGPointMake(defaultOriginX, defaultOriginY);
-    self.rotationView.alpha = 0;
-    [UIView animateWithDuration:0.1 animations:^{
-        self.rotationView.alpha = 1.0;
+    self.rotationView.alpha = 1;
+    self.rotationView.layer.transform = CATransform3DMakeScale(0.5, 0.5, 0);
+    [UIView animateWithDuration:0.25 animations:^{
+        self.rotationView.layer.transform = CATransform3DMakeScale(1, 1, 0);
     } completion:^(BOOL finished) {
         CABasicAnimation* rotationAnimation;
         rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 ];
-        rotationAnimation.duration = 1;
+        rotationAnimation.duration = 3;
         rotationAnimation.cumulative = YES;
         rotationAnimation.repeatCount = HUGE_VALF;
         [self.rotationView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
     }];
+    
+    [self.ballLayer refreshAnimating];
 }
 
 - (void)endRefreshing{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.rotationView.alpha = 0;
-        [self.rotationView.layer removeAllAnimations];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.rotationView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self.rotationView.layer removeAllAnimations];
+            [self.ballLayer removeAllAnimations];
+            self.superScrollView.userInteractionEnabled = YES;
+        }];
         [self.superScrollView setContentOffset:CGPointMake(0, -self.superScrollView.contentInset.top) animated:YES];
-        self.superScrollView.userInteractionEnabled = YES;
-        [self.ballLayer removeAllAnimations];
     });
 }
 

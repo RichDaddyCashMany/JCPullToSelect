@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "JCPullToSelect"
-  s.version      = "1.0"
+  s.version      = "1.0.1"
   s.summary      = "Stronger than pull-to-refresh"
   s.homepage     = "https://github.com/HJaycee/JCPullToSelect"
   s.license      = "MIT"
