@@ -2,7 +2,7 @@
 
 # 动图演示
 
-![(logo)](http://img2.ph.126.net/Llgf4tTJuUc2b7d6S8sBvw==/6631348141165948742.gif)
+![(logo)](http://img1.ph.126.net/Fit3r5t098GhrKmoAUfq3Q==/630785422826569864.gif)
 
 # 功能介绍
 
