@@ -16,7 +16,7 @@
 
 # 如何使用？
 
-## 1 使用Cocoapods导入
+## 1 使用CocoaPods导入
 
 #### 在Podfile增加一行：`pod 'JCPullToSelect'`
 
